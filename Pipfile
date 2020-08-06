@@ -12,6 +12,7 @@ wtforms = "*"
 flask-wtf = "*"
 email-validator = "==1.0.5"
 flask-sqlalchemy = "*"
+flask-bcrypt = "*"
 
 [requires]
 python_version = "3.7"
