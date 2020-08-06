@@ -17,39 +17,8 @@ posts = [
         'content': 'Post not again.',
         'date_posted': 'December 22, 2020'
     }
-]from models import User, Post
-
-
-posts = [
-    {
-        'author': 'John Doe',
-        'title': 'First Post',
-        'content': 'This is a post.',
-        'date_posted': 'August 4, 2020'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'Last Post',
-        'content': 'Post not again.',
-        'date_posted': 'December 22, 2020'
-    }
-]from models import User, Post
-
-
-posts = [
-    {
-        'author': 'John Doe',
-        'title': 'First Post',
-        'content': 'This is a post.',
-        'date_posted': 'August 4, 2020'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'Last Post',
-        'content': 'Post not again.',
-        'date_posted': 'December 22, 2020'
-    }
 ]
+
 
 @app.route("/")
 @app.route("/home")
