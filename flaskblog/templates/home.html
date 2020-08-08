@@ -19,7 +19,7 @@
                     <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
                 </div>
                 <!-- post title, h2 is a header I know that, and the title here is a link -->
-                <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
+                <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
                 <!-- `p` is paragraph, the posts content. probably want just a teaser and the title links to the rest of it-->
                 <p class="article-content">{{ post.content }}</p>
             </div>
