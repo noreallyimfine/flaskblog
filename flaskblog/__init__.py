@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 # import for using sql db through flask
 from flask_sqlalchemy import SQLAlchemy
@@ -5,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 # import for handling logged in sessions
 from flask_login import LoginManager
+from flask_mail import Mail
 
 # instantiate app
 app = Flask(__name__)
@@ -19,6 +21,12 @@ login_manager = LoginManager(app)
 # set some login attributes
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ.get('APP_TEST_EMAIL')
+app.config['MAIL_PASSWORD'] = os.environ.get('APP_TEST_EMAIL_PASS')
+mail = Mail(app)
 # import down here bec routes imports from this file.
 # (The linter doesnt like this, wonder if there is another way to handle)
 from flaskblog import routes
