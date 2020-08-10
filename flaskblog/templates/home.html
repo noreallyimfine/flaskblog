@@ -3,7 +3,7 @@
 {% extends "layout.html" %}
 {% block content %}
     <!-- cycling through posts to display, there is an `endfor` code block -->
-    {% for post in posts %}
+    {% for post in posts.items %}
         <!-- what is an html article? what are the bootstrap classes `media` and `content-section`? -->
         <article class="media content-section">
             <!-- displays the author of posts image. `url_for` is best practice for linking around the app -->
@@ -25,6 +25,14 @@
             </div>
         </article> 
     <!-- close that for loop explicitly -->
+    {% endfor %}
+    {% for page_num in posts.iter_pages() %}
+        {% if page_num %}
+            <a class="btn btn-outline-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+
+        {% else %}
+
+        {% endif %}
     {% endfor %}
 <!-- close code blocks explicitly -->
 {% endblock content %}

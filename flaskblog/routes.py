@@ -20,13 +20,15 @@ from flaskblog.forms import RegistrationForm, LoginForm, UpdateAccountForm, Post
 # flask module handling user sessions
 from flask_login import login_user, current_user, logout_user, login_required
 
+
 # home route, also root
 @app.route("/")
 @app.route("/home")
 # function called home
 def home():
+    page = request.args.get('page', 1, type=int)
     # query db for all posts
-    posts = Post.query.all()
+    posts = Post.query.paginate(page=page, per_page=5)
     # render template for home.html, passing posts variable to display on home page
     return render_template("home.html", posts=posts)
 
@@ -45,7 +47,6 @@ def register():
     if current_user.is_authenticated:
         # send them to the home page, they dont need to login
         return redirect(url_for('home'))
-    
     # isntantiate the form
     form = RegistrationForm()
     # did they validly submit a form?
