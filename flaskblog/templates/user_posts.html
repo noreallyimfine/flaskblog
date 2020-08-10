@@ -1,0 +1,43 @@
+<!-- syntax for opening python code blocks inside jinja templates -->
+<!-- uses a base layout for everypage -->
+{% extends "layout.html" %}
+{% block content %}
+    <h1 class="mb-3">Posts by {{ user.username }} ({{ posts.total }})</h1>
+    <!-- cycling through posts to display, there is an `endfor` code block -->
+    {% for post in posts.items %}
+        <!-- what is an html article? what are the bootstrap classes `media` and `content-section`? -->
+        <article class="media content-section">
+            <!-- displays the author of posts image. `url_for` is best practice for linking around the app -->
+            <img class="rounded-circle articl-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+            <!-- master div holding each post -->
+            <div class="media-body">
+                <!-- div holding the author and date posted -->
+                <div class="article-metadata">
+                    <!-- double curlys is how you insert a python variable but it needs to be passed to the render_template func -->
+                    <!-- `a` is a link, right now just back to the same page -->
+                    <a class="mr-2" href="{{ url_for('user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
+                    <!-- don't quite know what a small is but appears to be like a small header maybe -->
+                    <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+                </div>
+                <!-- post title, h2 is a header I know that, and the title here is a link -->
+                <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
+                <!-- `p` is paragraph, the posts content. probably want just a teaser and the title links to the rest of it-->
+                <p class="article-content">{{ post.content }}</p>
+            </div>
+        </article> 
+    <!-- close that for loop explicitly -->
+    {% endfor %}
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if posts.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('user_posts', username=user.username, page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+<!-- close code blocks explicitly -->
+{% endblock content %}
