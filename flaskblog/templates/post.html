@@ -12,7 +12,7 @@
             <div class="article-metadata">
                 <!-- double curlys is how you insert a python variable but it needs to be passed to the render_template func -->
                 <!-- `a` is a link, right now just back to the same page -->
-                <a class="mr-2" href="#">{{ post.author.username }}</a>
+                <a class="mr-2" href="{{ url_for('user_posts', username=post.author.username) }}">{{ post.author.username }}</a>
                 <!-- don't quite know what a small is but appears to be like a small header maybe -->
                 <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
                 {% if post.author == current_user %}
