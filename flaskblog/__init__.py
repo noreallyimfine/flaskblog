@@ -10,7 +10,7 @@ from flask_mail import Mail
 
 # instantiate app
 app = Flask(__name__)
-# need SECRET_KEY to prevent CSRF, on deployment should be in an environment variable I believe 
+# need SECRET_KEY to prevent CSRF, on deployment should be in an environment variable I believe
 app.config['SECRET_KEY'] = '822c98eca6467896aa98a99444439fcf'
 # set database url, sqlite for dev will switch to postgres for launch
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
@@ -29,4 +29,10 @@ app.config['MAIL_PASSWORD'] = os.environ.get('APP_TEST_EMAIL_PASS')
 mail = Mail(app)
 # import down here bec routes imports from this file.
 # (The linter doesnt like this, wonder if there is another way to handle)
-from flaskblog import routes
+from flaskblog.users.routes import users
+from flaskblog.posts.routes import posts
+from flaskblog.main.routes import main
+
+app.register_blueprint(users)
+app.register_blueprint(posts)
+app.register_blueprint(main)

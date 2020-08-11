@@ -27,7 +27,7 @@ def new_post():
         # show message
         flash('Your post has been created!', 'success')
         # send them home after logging in
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     # for GET request, just base create post template
     return render_template('create_post.html', title='New Post',
                            form=form, legend="New Post")
@@ -68,4 +68,4 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     flash('Your post has been deleted!', 'success')
-    return redirect(url_for('home'))
+    return redirect(url_for('main.home'))

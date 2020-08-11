@@ -5,7 +5,7 @@ from flaskblog.users.forms import (RegistrationForm, RequestResetForm,
                                    UpdateAccountForm)
 from flask_login import current_user, login_user, logout_user, login_required
 from flaskblog.models import User, Post
-from flasklog.users.utils import send_reset_email, save_picture
+from flaskblog.users.utils import send_reset_email, save_picture
 
 users = Blueprint('users', __name__)
 
@@ -17,7 +17,7 @@ def register():
     # how do they get to login if they are already logged in, maybe they typed in the URL
     if current_user.is_authenticated:
         # send them to the home page, they dont need to login
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     # isntantiate the form
     form = RegistrationForm()
     # did they validly submit a form?
@@ -37,7 +37,7 @@ def register():
         flash(f'Account created for {username}!, you can now log in!',
               'success')
         # using that redirect->url and it receives the function name for the login route
-        return redirect(url_for('login'))
+        return redirect(url_for('users.login'))
     # if its just GET request, show them the registration form
     return render_template('register.html', title='Register', form=form)
 
@@ -48,7 +48,7 @@ def login():
     # if they are already loggged in
     if current_user.is_authenticated:
         # send them home, notice redirect and 'home' is function name
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     # login form created
     form = LoginForm()
     # did they submit the form?
@@ -64,7 +64,7 @@ def login():
             if next_page:
                 return redirect(next_page)
             else:
-                return redirect(url_for('home'))
+                return redirect(url_for('main.home'))
         # login fails
         else:
             # tell them and stay on the page
@@ -80,7 +80,7 @@ def logout():
     # session handler to logout
     logout_user()
     # send them home
-    return redirect(url_for('home'))
+    return redirect(url_for('main.home'))
 
 
 # account route, also accepts POST
@@ -106,7 +106,7 @@ def account():
         flash('Your account has been updated!',
               'success')
         # send back to account page (to display the changes prolly we need to reload)
-        return redirect(url_for('account'))
+        return redirect(url_for('users.account'))
     # oh is it a get request?
     elif request.method == 'GET':
         # gotta show their current username and email
@@ -137,29 +137,35 @@ def user_posts(username):
 @users.route("/reset_password", methods=['GET', 'POST'])
 def reset_request():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         send_reset_email(user)
         flash("An email has been sent with instructions to reset your password.", 'info')
-        return redirect(url_for('login'))
-    return render_template('reset_request.html', title='Reset Password', form=form)
+        return redirect(url_for('users.login'))
+    return render_template('reset_request.html',
+                           title='Reset Password',
+                           form=form)
 
 
 @users.route("/reset_password/<token>", methods=['GET', 'POST'])
 def reset_token(token):
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('main.home'))
     user = User.verify_reset_token(token)
     if user is None:
         flash('That is an invalid or expired token', 'warning')
-        return redirect(url_for('reset_request'))
+        return redirect(url_for('users.reset_request'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        hashed_password = bcrypt.generate_password_hash(form.password.data)\
+                                .decode('utf-8')
         user.password = hashed_password
         db.session.commit()
-        flash('Your password has been changed! You are now able to log in.', 'success')
-        return redirect(url_for('login'))
-    return render_template('reset_token.html', title='Reset Password', form=form)
+        flash('Your password has been changed! You are now able to log in.',
+              'success')
+        return redirect(url_for('users.login'))
+    return render_template('reset_token.html',
+                           title='Reset Password',
+                           form=form)
